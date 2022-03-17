@@ -1,0 +1,56 @@
+<main>
+  <header>
+    <h1 class="p-3">Chat Apolo 👩‍💻🎄✨ [<span id="usuarios"></span>]</h1>
+  </header>
+
+
+  <div class="p-3 border shadow">
+    <ul class="lista" id="mensajes">
+    </ul>
+  </div>
+
+
+  <div class="campos d-flex justify-content-center p-5 bg-white fixed-bottom">
+
+    <label class="form-label me-4">Nombre</label>
+    <input type="text" class="form-control me-4" id="inputNombre">
+
+    <label class="form-label me-4">Mensaje</label>
+    <input type="text" class="form-control me-4" id="inputMensaje">
+
+    <button class="btn" id="btnEnviar">Enviar</button>
+
+  </div>
+
+</main>
+
+
+<script>
+  const socket = io();
+
+  const nombre = document.querySelector('#inputNombre');
+  const mensaje = document.querySelector('#inputMensaje');
+  const boton = document.querySelector('#btnEnviar');
+  const mensajes = document.querySelector('#mensajes');
+  const usuarios = document.querySelector('#usuarios');
+
+  boton.addEventListener('click', (e) => {
+    const data = {
+      nombre: nombre.value,
+      mensaje: mensaje.value
+    };
+
+    socket.emit('mensaje_chat', data);
+  });
+
+  socket.on('mensaje_chat', (data) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${data.nombre}: </strong> ${data.mensaje}`
+    mensajes.append(li);
+  });
+
+  socket.on('num_usuarios', (num) => {
+    usuarios.innerText = num;
+  })
+
+</script>
